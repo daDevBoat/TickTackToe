@@ -376,7 +376,7 @@ namespace tickTackToe
             Pass på hest-movement
 
             Generell algorithme:
-            - Sjekke for L, l, T og hest
+            - Sjekke for L, l og hest
 
             */
         }
@@ -447,5 +447,4 @@ farlige trekk:
 - stor L
 - liten L
 - hest
-- T
  */

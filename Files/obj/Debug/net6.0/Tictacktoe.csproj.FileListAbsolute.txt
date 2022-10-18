@@ -1,0 +1,15 @@
+C:\Users\elnaa001\Source\Repos\TickTackToe\Files\bin\Debug\net6.0\Tictacktoe.exe
+C:\Users\elnaa001\Source\Repos\TickTackToe\Files\bin\Debug\net6.0\Tictacktoe.deps.json
+C:\Users\elnaa001\Source\Repos\TickTackToe\Files\bin\Debug\net6.0\Tictacktoe.runtimeconfig.json
+C:\Users\elnaa001\Source\Repos\TickTackToe\Files\bin\Debug\net6.0\Tictacktoe.dll
+C:\Users\elnaa001\Source\Repos\TickTackToe\Files\bin\Debug\net6.0\Tictacktoe.pdb
+C:\Users\elnaa001\Source\Repos\TickTackToe\Files\obj\Debug\net6.0\Tictacktoe.csproj.AssemblyReference.cache
+C:\Users\elnaa001\Source\Repos\TickTackToe\Files\obj\Debug\net6.0\Tictacktoe.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\elnaa001\Source\Repos\TickTackToe\Files\obj\Debug\net6.0\Tictacktoe.AssemblyInfoInputs.cache
+C:\Users\elnaa001\Source\Repos\TickTackToe\Files\obj\Debug\net6.0\Tictacktoe.AssemblyInfo.cs
+C:\Users\elnaa001\Source\Repos\TickTackToe\Files\obj\Debug\net6.0\Tictacktoe.csproj.CoreCompileInputs.cache
+C:\Users\elnaa001\Source\Repos\TickTackToe\Files\obj\Debug\net6.0\Tictacktoe.dll
+C:\Users\elnaa001\Source\Repos\TickTackToe\Files\obj\Debug\net6.0\refint\Tictacktoe.dll
+C:\Users\elnaa001\Source\Repos\TickTackToe\Files\obj\Debug\net6.0\Tictacktoe.pdb
+C:\Users\elnaa001\Source\Repos\TickTackToe\Files\obj\Debug\net6.0\Tictacktoe.genruntimeconfig.cache
+C:\Users\elnaa001\Source\Repos\TickTackToe\Files\obj\Debug\net6.0\ref\Tictacktoe.dll
