@@ -403,10 +403,9 @@ namespace tickTackToe
                  endringer;
                     stor L
                     lagt til kommentarer
-
-                 
-                 
-                 
+                    liten l
+                    random trekk
+                    seiers melding
                  
                  
                  */
@@ -448,4 +447,5 @@ farlige trekk:
 - stor L
 - liten L
 - hest
+- T
  */
