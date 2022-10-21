@@ -7,6 +7,7 @@ namespace tickTackToe
 {
     public static class Storage
     {
+        public static bool done = false;
         public static int roundNum = 1;
         public static int[] lastMove = { 3, 3 };
         public static string[][] board =
@@ -22,7 +23,7 @@ namespace tickTackToe
     {
         static string CheckWin()
         {
-            Storage.roundNum++;
+
             foreach (string[] arg in Storage.board)
             {
                 if (arg[0] == arg[1] && arg[0] == arg[2] && arg[0] != "-")
@@ -215,6 +216,7 @@ namespace tickTackToe
 
             if (Storage.roundNum == 1) //egne trekk første trekk, fordi det er få muligheter og vi har funnet ut hva som er best.
             {
+                Console.WriteLine("gfgd");
                 if (Storage.board[1][1] == "X") //spiller plasser i midten
                 {
                     Random rdm = new Random();
@@ -223,6 +225,7 @@ namespace tickTackToe
                 }
                 else if (Storage.board[1][0] == "X" || Storage.board[0][1] == "X" || Storage.board[2][1] == "X" || Storage.board[1][2] == "X")   // Hvis spiller setter brikke på siden
                 {
+                    Console.WriteLine("gfdtyu");
                     if (Storage.lastMove[0] == 1)   // lasMove[0] = y
                     {
                         Storage.board[1][2 - Storage.lastMove[1]] = "O";
@@ -271,8 +274,6 @@ namespace tickTackToe
                             int corner = rdm.Next(0, 4);
 
                             //Storage.board[sidePos[corner][1]][sidePos[corner][0]] = "O";
-
-
                             if (sidePos[corner][1] == 1)
                             {
                                 if (Storage.board[sidePos[corner][1]][sidePos[corner][0]] == "-" && Storage.board[sidePos[corner][1]][2 - sidePos[corner][0]] == "-" && Storage.board[1][1] == "X")
@@ -327,8 +328,43 @@ namespace tickTackToe
                             }
                         }
                         //Hest her
-                      
-                        // T
+                        int[][] horsePosChecksRight =
+                        {
+                            new int[] {1, 2, 3}, //3 da skal den oppover  2 felt
+                            new int[] {0, 2, 3},
+                            new int[] {0, 1, 4}, // 4 da skal den bortover 2 felt
+                            new int[] {0, 0, 4}
+                        };
+                        int[][] horsePosChecksLeft =
+                        {
+                            new int[] {1, 2, 3}, //3 da skal den oppover 2 felt
+                            new int[] {2, 2, 3},
+                            new int[] {2, 1, 4}, //4 da skal den bortover 3 felt
+                            new int[] {2, 0, 4}
+                        };
+
+                        foreach (int[] ele in horsePosChecksLeft)
+                        {
+                            if (ele[2] == 3)
+                            {
+                                if (Storage.board[ele[1]][ele[0]] == "X" && Storage.board[0][ele[0] + 1] == "X"  )
+                                {
+                                    int leftRow = ele[0] - 1;
+                                    if (leftRow == -1)
+                                    {
+                                        leftRow = 2;
+                                    }
+                                    if (Storage.board[1][ele[0]] == "-" && Storage.board[0][ele[0]] == "-" ) { }
+                                }
+                            }
+                            else
+                            {
+
+                            }
+
+                        }
+                    
+
 
                         //Strategisk flytt for å vinne
 
@@ -348,8 +384,10 @@ namespace tickTackToe
                         {
                             Showboard();
                             Console.WriteLine("\nBra spilt, men det ble uavgjort. Bedre lykke neste gang!");
+                            Storage.done = true;
                             return;
-                        } 
+                     
+                        }
                         Random rdmPlace = new Random();
                         int rdmNum = rdmPlace.Next(availableSpaces.Count);
                         Storage.board[availableSpaces[rdmNum][1]][availableSpaces[rdmNum][0]] = "O";
@@ -376,21 +414,42 @@ namespace tickTackToe
             Pass på hest-movement
 
             Generell algorithme:
-            - Sjekke for L, l og hest
+            - Sjekke for L, l, T og hest
 
             */
         }
 
         static void Main()
         {
-            bool done = false;
 
             Console.WriteLine("Ta utgangspunkt i at venstre hjørne er 0, 0. Skriv koordinatene på formen \"x, y\"");
-            while (!done)
+            while (!Storage.done)
             {
+
                 Showboard();
                 spillerPlassering();
-                FakeAI();
+
+                string winner = CheckWin();
+                if (winner == "X")
+                {
+                    Showboard();
+                    Console.WriteLine("Gratulerer spiller, du vant over monsteret!");
+                    Storage.done = true;
+                }
+                else
+                {
+                    FakeAI();
+
+                    winner = CheckWin();
+
+                    if (winner == "O")
+                    {
+                        Console.WriteLine("Du tapte dessverre mot monsteret. Bedre lykke neste gang!");
+                        Storage.done = true;
+                    }
+                    
+                }
+                Storage.roundNum++;
 
                 /*
                  
@@ -403,27 +462,13 @@ namespace tickTackToe
                  endringer;
                     stor L
                     lagt til kommentarer
-                    liten l
-                    random trekk
-                    seiers melding
+
+                 
+                 
+                 
                  
                  
                  */
-                string winner = CheckWin();
-
-                if (winner != null)
-                {
-                    if (winner == "X")
-                    {
-                        Showboard();
-                        Console.WriteLine("Gratulerer spiller, du vant over monsteret!");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Du tapte dessverre mot monsteret. Bedre lykke neste gang!");
-                    }
-                    done = true;
-                }
 
             }
 
