@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Numerics;
@@ -72,11 +72,12 @@ namespace tickTackToe
             }
         }
 
-        static int[] CheckAlmostWin(string playerType)
+        static int[] CheckAlmostWin(string[][] board ,string playerType, int numOfW)
         {
-            for (int y = 0; y < Storage.board.Length; y++)
+            int winPoss = 0;
+            for (int y = 0; y < board.Length; y++)
             {
-                string[] row = Storage.board[y];
+                string[] row = board[y];
                 int count = 0;
                 int[] pos = { 3, 3 };
                 bool hypCheck = false;
@@ -98,7 +99,14 @@ namespace tickTackToe
                     }
                     if (count == 2 && i == 2 && hypCheck)
                     {
-                        return pos;
+                        if (numOfW == 1)
+                        { 
+                            return pos; 
+                        }
+                        else
+                        {
+                            winPoss++;
+                        }
                     }
 
                 }
@@ -107,24 +115,31 @@ namespace tickTackToe
             for (int x = 0; x < 3; x++)
             {
                 int count = 0;
-                int[] pos = { 0, 0 };
+                int[] pos = { 3, 3 };
                 bool hypCheck = false;
                 for (int y = 0; y < 3; y++)
                 {
-                    if (Storage.board[y][x] == playerType)
+                    if (board[y][x] == playerType)
                     {
                         count++;
                     }
-                    else if (Storage.board[y][x] == "-")
+                    else if (board[y][x] == "-")
                     {
-                        hypCheck |= true;
+                        hypCheck = true;
                         pos[0] = x;
                         pos[1] = y;
 
                     }
                     if (count == 2 && y == 2 && hypCheck)
                     {
-                        return pos;
+                        if (numOfW == 1)
+                        {
+                            return pos;
+                        }
+                        else
+                        {
+                            winPoss++;
+                        }
 
                     }
 
@@ -132,16 +147,16 @@ namespace tickTackToe
                 }
             }
             int count2 = 0;
-            int[] pos3 = { 0, 0 };
+            int[] pos3 = { 3, 3 };
             bool hypCheck3 = false;
             for (int i = 0; i < 3; i++)
             {
 
-                if (Storage.board[i][i] == playerType)
+                if (board[i][i] == playerType)
                 {
                     count2++;
                 }
-                else if (Storage.board[i][i] == "-")
+                else if (board[i][i] == "-")
                 {
                     hypCheck3 = true;
                     pos3[0] = i;
@@ -150,22 +165,29 @@ namespace tickTackToe
                 }
                 if (count2 == 2 && i == 2 && hypCheck3)
                 {
-                    return pos3;
+                    if (numOfW == 1)
+                    {
+                        return pos3;
+                    }
+                    else
+                    {
+                        winPoss++;
+                    }
 
                 }
             }
             int count3 = 0;
-            int[] pos2 = { 0, 0 };
+            int[] pos2 = { 3, 3 };
             bool hypCheck2 = false;
 
             for (int i = 0; i < 3; i++)
             {
 
-                if (Storage.board[i][2 - i] == playerType)
+                if (board[i][2 - i] == playerType)
                 {
                     count3++;
                 }
-                else if (Storage.board[i][2 - i] == "-")
+                else if (board[i][2 - i] == "-")
                 {
                     pos2[0] = 2 - i;
                     pos2[1] = i;
@@ -174,12 +196,26 @@ namespace tickTackToe
                 }
                 if (count3 == 2 && i == 2 && hypCheck2)
                 {
-                    return pos2;
+                    if (numOfW == 1)
+                    {
+                        return pos2;
+                    }
+                    else
+                    {
+                        winPoss++;
+                    }
                 }
 
             }
+
+            if (numOfW != 1)
+            {
+                return new int[] {winPoss};
+            }
+
             int[] test = { 3, 3 };
             return test;
+
         }
 
         static void Showboard()
@@ -216,7 +252,7 @@ namespace tickTackToe
 
             if (Storage.roundNum == 1) //egne trekk første trekk, fordi det er få muligheter og vi har funnet ut hva som er best.
             {
-                Console.WriteLine("gfgd");
+
                 if (Storage.board[1][1] == "X") //spiller plasser i midten
                 {
                     Random rdm = new Random();
@@ -225,7 +261,6 @@ namespace tickTackToe
                 }
                 else if (Storage.board[1][0] == "X" || Storage.board[0][1] == "X" || Storage.board[2][1] == "X" || Storage.board[1][2] == "X")   // Hvis spiller setter brikke på siden
                 {
-                    Console.WriteLine("gfdtyu");
                     if (Storage.lastMove[0] == 1)   // lasMove[0] = y
                     {
                         Storage.board[1][2 - Storage.lastMove[1]] = "O";
@@ -243,23 +278,24 @@ namespace tickTackToe
             else //alle andre runder enn første runde.
                  //vi må se om vi selv kan vinne for vi vil da plassere der, hvis ikke: hvis spilleren holder på å vinne, vil vi plassere der for å blokke. tilslutt har vi strategi for hvis vi ser det er måter spilleren utføre en gaffel manøver som vi må blokke for et trekk før.
             {
-                int[] attack = CheckAlmostWin("O"); //først hvis vi selv holder på å vinne og gir tilbake koordinater.
+                int[] attack = CheckAlmostWin(Storage.board,"O", 1); //først hvis vi selv holder på å vinne og gir tilbake koordinater.
 
                 if (!(attack[0] == attack[1] && attack[0] == 3)) //må sjekke om det ikke er 3,3. dette er standard verdien, som egentlig betyr vi ikke kan vinne
                 {
                     Storage.board[attack[1]][attack[0]] = "O"; //plassere for å vinne
                     Showboard();
+
                 }
                 else //3,3 altså vi kan ikke vinne
                 {
-                    int[] defence = CheckAlmostWin("X"); //sjekker så for om motstanderen kan vinne
+                    int[] defence = CheckAlmostWin(Storage.board,"X", 1); //sjekker så for om motstanderen kan vinne
                     if (!(defence[0] == defence[1] && defence[0] == 3)) //ser igjen om denne er 3,3 som ville betyd at standard verdien sendes tilbake, altså motstanndere kan vinne.
                     {
                         Storage.board[defence[1]][defence[0]] = "O"; //plasser for å hindre at motstanderen vinner.
                     }
                     else //ingen kan vinne i neste trekk.
                     {
-                        if ((Storage.board[0][0] == "X" && Storage.board[2][2] == "X") || (Storage.board[0][2] == "X" || Storage.board[2][0] == "X")) //vi ser om motstanderen har plassesert i to motsatte hjørner.  //stor L
+                        if ((Storage.board[0][0] == "X" && Storage.board[2][2] == "X") || (Storage.board[0][2] == "X" && Storage.board[2][0] == "X")) //vi ser om motstanderen har plassesert i to motsatte hjørner.  //stor L
                         {
                             int[][] sidePos =
                             {
@@ -316,6 +352,7 @@ namespace tickTackToe
                         }
                         for (int i = 0; i < cornersPos.Length; i++) // Sjekker for l
                         {
+
                             if (!(Storage.board[cornersPos[i][1]][cornersPos[i][0]] == "-"))
                             {
                                 //Console.WriteLine("break");
@@ -328,7 +365,171 @@ namespace tickTackToe
                             }
                         }
                         //Hest her
-                        int[][] horsePosChecksRight =
+                        for (int y = 0; y < Storage.board.Length; y++)
+                        {
+                            for (int x = 0; x < Storage.board.Length; x++)
+                            {
+
+                                if (Storage.board[y][x] == "-")
+                                {
+                                    string[][] tempBoard = 
+                                    {
+                                        new string[] {"-", "-", "-"},
+                                        new string[] {"-", "-", "-"},
+                                        new string[] {"-", "-", "-"}
+                                    };
+
+
+                                    for (int j = 0; j < Storage.board.Length; j++)
+                                    {
+                                        for (int h = 0; h < Storage.board.Length; h++)
+                                        {
+                                            tempBoard[j][h] = Storage.board[j][h];
+                                        }
+                                    }
+                                    //string[][] tempBoard = Storage.board.Clone() as string[][];
+                                    
+                                    tempBoard[y][x] = "X";
+
+
+
+                                    if (CheckAlmostWin(tempBoard, "X", 3)[0] > 1) 
+                                    {
+                                        Storage.board[y][x] = "O";
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+
+                        //Strategisk flytt for å vinne
+                        int[] bestPos = { 3, 3 };
+                        int highestPoss = -1;
+                        for (int y = 0; y < Storage.board.Length; y++)
+                        {
+                            for (int x = 0; x < Storage.board.Length; x++)
+                            {
+
+                                if (Storage.board[y][x] == "-")
+                                {
+                                    string[][] tempBoard =
+                                    {
+                                        new string[] {"-", "-", "-"},
+                                        new string[] {"-", "-", "-"},
+                                        new string[] {"-", "-", "-"}
+                                    };
+
+
+                                    for (int j = 0; j < Storage.board.Length; j++)
+                                    {
+                                        for (int h = 0; h < Storage.board.Length; h++)
+                                        {
+                                            tempBoard[j][h] = Storage.board[j][h];
+                                        }
+                                    }
+
+                                    tempBoard[y][x] = "O";
+
+
+
+                                    if (CheckAlmostWin(tempBoard, "O", 3)[0] > highestPoss)
+                                    {
+                                        bestPos[0] = y;
+                                        bestPos[1] = x;
+                                        highestPoss = CheckAlmostWin(tempBoard, "O", 3)[0];
+                                    }
+                                }
+                            }
+                        }
+
+                        if(bestPos[0] == 3)
+                        {
+                            Showboard();
+                            Console.WriteLine("Du spilte uavgjort mot monsteret, seier er umulig mohahahahahaha!");
+                            Storage.done = true;
+                        }
+                        else
+                        {
+                            Storage.board[bestPos[0]][bestPos[1]] = "O";
+                        }
+
+                    }
+                }
+            }
+            /*
+            1 Sjekke om den kan vinne
+            2 Forsvare motstander akkurat nå
+            3 Strategiw
+
+            Strategi:
+
+            - Starter i midten
+            Da velger vi et tilfeldig hjørne
+            Hvis spiller plasserer på siden utløses 2 || Hvis spiller plassere i hjørnet som ikke er motsatt av vårt hjørne, plasser der    
+
+
+            - Starter i hjørnet
+            Må plassrere i midten og så side || side rett ved siden av X-en og så videre...
+
+            - Starter på siden
+            Setter på den motsatte siden
+            Pass på hest-movement
+
+            Generell algorithme:
+            - Sjekke for L, l, T og hest
+
+            */
+        }
+
+        static void Main()
+        {
+            Console.WriteLine("Ta utgangspunkt i at venstre hjørne er 0, 0. Skriv koordinatene på formen \"x, y\"");
+            while (!Storage.done)
+            {
+
+                Showboard();
+                spillerPlassering();
+
+                string winner = CheckWin();
+
+
+                if (winner == "X") // Dette er en undøvendig sjekk, spilleren kan aldri vinne hahahahahaha
+                {
+                    Console.WriteLine("Gratulerer spiller, du vant over monsteret!");
+                    Storage.done = true;
+                }
+                else
+                {
+                    FakeAI();
+
+                    winner = CheckWin();
+
+                    if (winner == "O")
+                    {
+                        Console.WriteLine("Du tapte dessverre mot monsteret. Ditt nederlag var uungåelig!");
+                        Storage.done = true;
+                    }
+                    
+                }
+                Storage.roundNum++;
+
+                /*
+                 
+                 
+                 
+                 
+                 
+                 det er viktig at taktikken vår er basert på at ting skjer i andre trekk. 
+                 
+                 endringer;
+                    stor L
+                    lagt til kommentarer
+
+                 
+                 
+
+                CODE GRAVEYARD:
+                int[][] horsePosChecksRight =
                         {
                             new int[] {1, 2, 3}, //3 da skal den oppover  2 felt
                             new int[] {0, 2, 3},
@@ -363,12 +564,10 @@ namespace tickTackToe
                             }
 
                         }
-                    
 
 
-                        //Strategisk flytt for å vinne
 
-                        //Random move
+                //Random move
                         List<int[]> availableSpaces = new();
                         for (int y = 0; y < Storage.board.Length; y++)
                         {
@@ -391,81 +590,6 @@ namespace tickTackToe
                         Random rdmPlace = new Random();
                         int rdmNum = rdmPlace.Next(availableSpaces.Count);
                         Storage.board[availableSpaces[rdmNum][1]][availableSpaces[rdmNum][0]] = "O";
-                    }
-                }
-            }
-            /*
-            1 Sjekke om den kan vinne
-            2 Forsvare motstander akkurat nå
-            3 Strategiw
-
-            Strategi:
-
-            - Starter i midten
-            Da velger vi et tilfeldig hjørne
-            Hvis spiller plasserer på siden utløses 2 || Hvis spiller plassere i hjørnet som ikke er motsatt av vårt hjørne, plasser der    
-
-
-            - Starter i hjørnet
-            Må plassrere i midten og så side || side rett ved siden av X-en og så videre...
-
-            - Starter på siden
-            Setter på den motsatte siden
-            Pass på hest-movement
-
-            Generell algorithme:
-            - Sjekke for L, l, T og hest
-
-            */
-        }
-
-        static void Main()
-        {
-
-            Console.WriteLine("Ta utgangspunkt i at venstre hjørne er 0, 0. Skriv koordinatene på formen \"x, y\"");
-            while (!Storage.done)
-            {
-
-                Showboard();
-                spillerPlassering();
-
-                string winner = CheckWin();
-                if (winner == "X")
-                {
-                    Showboard();
-                    Console.WriteLine("Gratulerer spiller, du vant over monsteret!");
-                    Storage.done = true;
-                }
-                else
-                {
-                    FakeAI();
-
-                    winner = CheckWin();
-
-                    if (winner == "O")
-                    {
-                        Console.WriteLine("Du tapte dessverre mot monsteret. Bedre lykke neste gang!");
-                        Storage.done = true;
-                    }
-                    
-                }
-                Storage.roundNum++;
-
-                /*
-                 
-                 
-                 
-                 
-                 
-                 det er viktig at taktikken vår er basert på at ting skjer i andre trekk. 
-                 
-                 endringer;
-                    stor L
-                    lagt til kommentarer
-
-                 
-                 
-                 
                  
                  
                  */
