@@ -24,6 +24,13 @@ Checkwin er en funksjon som sjekker om noen har tre på rad og returnerer null h
 
 
 #### FakeAI
+Vi har først definert punktet (3,3) som en return-verdi når tingene ikke oppfylles, ettersom, (3,3) ikke finnes. 
+
+Det første vi sjekker er om vi har mulighet til å vinne i dette trekker, og plasser der, hvis det er mulig.
+Så sjekker vi om spilleren kan vinne i neste trekk, og plasserer der de skulle plassert for å vinne, slik at spilleren ikke vinner. 
+Deretter, hvis ingen kan vinne i neste trekk, sjekker vi for farlige trekk.
+Hvis dette heller ikke er farlig, prøver vi å plassere et sted som er fordelaktig for oss, men dette kunne vært mer optimalisert og gitt et bedre resultat.
+
 
 ### Spillogikk
 Det er tre hovedproblemer som algoritmen vår må passe seg for. Alle trekkene som gjør, vil hvis ikke de riktige trekkene gjøres, føre til at spilleren får to måter å vinne på i neste trekk. De tre problemene er liten l, stor L og hest.
